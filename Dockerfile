@@ -1,11 +1,11 @@
-FROM bastiion/mattermost-build-base:latest AS webapp-builder
+FROM bastilion/mattermost-build-base:latest AS webapp-builder
 
 COPY mattermost-webapp/ /app/
 WORKDIR /app
 RUN make build
 
 
-FROM mattermost-build-base:latest AS server-builder
+FROM bastilion/mattermost-build-base:latest AS server-builder
 
 COPY mattermost-server/ /go/src/github.com/blindsidenetworks/mattermost-server/
 WORKDIR /go/src/github.com/blindsidenetworks/mattermost-server

@@ -1,0 +1,8 @@
+[submodule "mattermost-webapp"]
+	path = mattermost-webapp
+	url = https://github.com/bastiion/mattermost-webapp.git
+	branch = release-5.22-gew
+[submodule "mattermost-server"]
+	path = mattermost-server
+	url = https://github.com/bastiion/mattermost-server.git
+	branch = release-5.22-gew

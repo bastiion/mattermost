@@ -1,13 +1,24 @@
 FROM bastilion/mattermost-build-base:latest AS webapp-builder
 
-COPY mattermost-webapp/ /app/
+ENV MM_BRANCH "release-5.22-gew"
+
+RUN git clone \
+ --single-branch --branch "$MM_BRANCH" \
+ https://github.com/bastiion/mattermost-webapp \
+ /app
 WORKDIR /app
+RUN npm install imagemin-gifsicle
 RUN make build
 
 
 FROM bastilion/mattermost-build-base:latest AS server-builder
 
-COPY mattermost-server/ /go/src/github.com/blindsidenetworks/mattermost-server/
+ENV MM_BRANCH "release-5.22-gew"
+
+RUN git clone \
+ --single-branch --branch "$MM_BRANCH" \
+ https://github.com/bastiion/mattermost-server \
+ /go/src/github.com/blindsidenetworks/mattermost-server
 WORKDIR /go/src/github.com/blindsidenetworks/mattermost-server
 RUN make build
 COPY --from=webapp-builder /app/  /go/src/github.com/blindsidenetworks/mattermost-webapp/
@@ -21,7 +32,6 @@ FROM alpine:3.11
 ENV PATH="/mattermost/bin:${PATH}"
 ARG PUID=2000
 ARG PGID=2000
-ARG MM_PACKAGE="https://releases.mattermost.com/5.22.2/mattermost-5.22.2-linux-amd64.tar.gz"
 
 
 # Install some needed packages

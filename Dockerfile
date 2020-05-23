@@ -1,4 +1,4 @@
-FROM bastilion/mattermost-build-base:latest AS webapp-builder
+FROM mattermost/mattermost-build-webapp:oct-2-2018 AS webapp-builder
 
 ENV MM_BRANCH "release-5.22-gew"
 
@@ -7,7 +7,8 @@ RUN git clone \
  https://github.com/bastiion/mattermost-webapp \
  /app
 WORKDIR /app
-RUN npm install imagemin-gifsicle
+RUN npm install
+RUN cd node_modules/mattermost-redux && npm i && npm run build
 RUN make build
 
 
@@ -55,7 +56,7 @@ RUN apk add --no-cache \
 #  && adduser -D -u ${PUID} -G mattermost -h /mattermost -D mattermost \
 #  && chown -R mattermost:mattermost /mattermost /mattermost/plugins /mattermost/client/plugins
 
-COPY --from=server-builder dist/mattermost-team-linux-amd64.tar.gz mattermost-team-linux-amd64.tar.gz
+COPY --from=server-builder /go/src/github.com/blindsidenetworks/mattermost-server/dist/mattermost-team-linux-amd64.tar.gz mattermost-team-linux-amd64.tar.gz
 
 RUN mkdir -p /mattermost/data /mattermost/plugins /mattermost/client/plugins \
     && tar -xzf  mattermost-team-linux-amd64.tar.gz \
